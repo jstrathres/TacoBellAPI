@@ -13,12 +13,4 @@ public partial class Drink
     public float Cost { get; set; }
 
     public bool Slushie { get; set; }
-
-    public Drink(int id, string name, float cost, bool slushie)
-    {
-        Id = id;
-        Name = name;
-        Cost = cost;
-        Slushie = slushie;
-    }
 }

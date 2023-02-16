@@ -11,33 +11,48 @@ namespace TacoBellAPI.Controllers
     {
         public TacoBellDbContext dbContext = new TacoBellDbContext();
 
-        [HttpGet]
+        [HttpGet] 
         public List<Drink> GetAll()
         {
             return dbContext.Drinks.ToList();
         }
-
-        [HttpGet("Id")]
-        public Drink GetById(int i)
+        
+        [HttpGet("{id}")]
+        public Drink GetById(int id)
         {
-            return (Drink)dbContext.Drinks.Where(d => d.Id == i);
+            return dbContext.Drinks.FirstOrDefault(d => d.Id == id);
         }
 
         [HttpPost]
-        public Drink AddDrink(int id, string name, float cost, bool slushie)
+        public Drink AddDrink(string name, float cost, bool slushie)
         {
-            Drink newDrink = new Drink(id, name, cost, slushie);
-            dbContext.Drinks.Add(newDrink);
+            //replaces Method
+            Drink newDrink = new Drink()
+            {
+                Name = name,
+                Cost = cost,
+                Slushie = slushie              
+            };
 
-            return newDrink;  //common practice to return new object...newBook is just default naming
+            dbContext.Drinks.Add(newDrink);
+            dbContext.SaveChanges();
+
+            return newDrink;
         }
 
-        [HttpDelete]
-        public Drink DeleteBook(string name)
+        [HttpDelete("{id}")]
+        public Drink DeleteDrinkById(int id)
         {
-            Drink d = dbContext.Drinks.FirstOrDefault(d => d.Name == name);
+            Drink d = dbContext.Drinks.FirstOrDefault(d => d.Id == id);  //LINQ= (i => i.Id == id)
+            dbContext.Drinks.Remove(d);
             dbContext.SaveChanges();
             return d;           
+        }
+
+        [HttpGet("Slushie")]
+        public List<Drink> GetAllBySlushie(bool slushie)
+        {
+            return dbContext.Drinks.Where(b => b.Slushie == slushie).ToList();
         }
     }
 }

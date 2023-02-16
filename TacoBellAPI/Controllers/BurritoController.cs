@@ -16,10 +16,18 @@ namespace TacoBellAPI.Controllers
             return dbContext.Burritos.ToList();
         }
 
-        [HttpGet("Id")]
-        public Burrito GetById(int i)
+        [HttpGet("{id}")]
+        public Burrito GetById(int id)
         {
-            return (Burrito)dbContext.Burritos.Where(d => d.Id == i);
+            return dbContext.Burritos.FirstOrDefault(b => b.Id == id);
+        }
+
+        //api/burrtio/beans?beans=true
+        //api/burrtio/beans?beans=false
+        [HttpGet("beans")]
+        public List<Burrito> GetAllByBeans(bool beans)
+        {
+            return dbContext.Burritos.Where(b=>b.Bean==beans).ToList();
         }
     }
 }
